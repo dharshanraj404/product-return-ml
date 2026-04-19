@@ -1,8 +1,3 @@
-# ==========================================
-# threshold_tuning.py
-# Recall-Focused Threshold Optimization
-# ==========================================
-
 import os
 import joblib
 import pandas as pd
@@ -13,17 +8,11 @@ from sklearn.model_selection import train_test_split
 
 print("Setting up paths...")
 
-# =====================================
-# 1️⃣ Setup Paths
-# =====================================
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 data_path = os.path.join(BASE_DIR, "data", "enterprise_product_return_dataset_v2.csv")
 model_path = os.path.join(BASE_DIR, "models", "return_model_v4_recall_optimized.pkl")
 
-# =====================================
-# 2️⃣ Load Dataset
-# =====================================
 
 print("Loading dataset...")
 df = pd.read_csv(data_path)
@@ -44,24 +33,15 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
 
-# =====================================
-# 3️⃣ Load Trained Model
-# =====================================
 
 print("Loading trained model...")
 model = joblib.load(model_path)
 print("Model loaded successfully.")
 
-# =====================================
-# 4️⃣ Get Prediction Probabilities
-# =====================================
 
 print("Generating prediction probabilities...")
 y_probs = model.predict_proba(X_test)[:, 1]  # Probability of class 1 (returned)
 
-# =====================================
-# 5️⃣ Test Multiple Thresholds
-# =====================================
 
 print("\nThreshold Tuning Results:")
 print("-------------------------------------------------")

@@ -1,21 +1,9 @@
-# =====================================
-# 📦 Import Required Libraries
-# =====================================
-
 import os
 import joblib
 import pandas as pd
 from flask import Flask, request, jsonify
 
-# =====================================
-# ⚙ Configuration
-# =====================================
-
 THRESHOLD = 0.30
-
-# =====================================
-# 📂 Setup Base Directory
-# =====================================
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -27,9 +15,6 @@ model_path = os.path.join(
 
 print("Loading V2 RandomForest model from:", model_path)
 
-# =====================================
-# 🤖 Load Pipeline Model
-# =====================================
 
 if not os.path.exists(model_path):
     raise FileNotFoundError("V2 model file not found!")
@@ -38,23 +23,14 @@ model = joblib.load(model_path)
 
 print("Model loaded successfully!")
 
-# =====================================
-# 🚀 Initialize Flask App
-# =====================================
 
 app = Flask(__name__)
 
-# =====================================
-# 🏠 Home Route
-# =====================================
 
 @app.route("/")
 def home():
     return "Product Return Prediction API (V2 Clean Pipeline) Running!"
 
-# =====================================
-# 🔮 Prediction Route
-# =====================================
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -67,7 +43,7 @@ def predict():
         # Convert JSON → DataFrame
         input_df = pd.DataFrame([data])
 
-        # 🔥 IMPORTANT: Add engineered features (same as training)
+        #  IMPORTANT: Add engineered features (same as training)
         input_df["return_ratio"] = (
             input_df["previous_returns"] /
             (input_df["customer_order_count_before"] + 1)
@@ -105,10 +81,6 @@ def predict():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
-# =====================================
-# ▶ Run Application
-# =====================================
 
 if __name__ == "__main__":
     app.run(debug=True)
